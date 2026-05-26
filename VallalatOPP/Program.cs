@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace VallalatOPP
 {
@@ -50,6 +51,49 @@ namespace VallalatOPP
 					Console.WriteLine($"{((Mesterember)item).Nev} összes bevétel: {item.HaviBevetel()} Ft");
 				}
 				else if(item.GetType() == typeof(Fuvarozo))
+				{
+					Console.WriteLine($"{((Fuvarozo)item).Nev} összes bevétel: {item.HaviBevetel()} Ft");
+				}
+			}
+
+			foreach (var item in File.ReadAllLines("dolgozok.txt", Encoding.UTF8))
+			{
+				string[] seged = item.Split(';');
+
+				switch (seged[0])
+				{
+					case "burkolo":
+						if (seged[3] == "Belső")
+						{
+							lista.Add(new Burkolo(seged[1], int.Parse(seged[2]), Helyszin.Belső));
+						}
+						else if (seged[3] == "Külső")
+						{
+							lista.Add(new Burkolo(seged[1], int.Parse(seged[2]), Helyszin.Külső));
+						}
+						break;
+					case "vizvezetekszerelo":
+						lista.Add(new VizvezetekSzerelo(seged[1], int.Parse(seged[2]), int.Parse(seged[3])));
+						break;
+					case "fuvarozo":
+						lista.Add(new Fuvarozo(seged[1], int.Parse(seged[2])));
+						break;
+
+					default:
+						break;
+				}
+
+			}
+
+			Console.WriteLine("------------------------------------------------------------------------");
+
+			foreach (var item in lista)
+			{
+				if (item is Mesterember)
+				{
+					Console.WriteLine($"{((Mesterember)item).Nev} összes bevétel: {item.HaviBevetel()} Ft");
+				}
+				else if (item.GetType() == typeof(Fuvarozo))
 				{
 					Console.WriteLine($"{((Fuvarozo)item).Nev} összes bevétel: {item.HaviBevetel()} Ft");
 				}
